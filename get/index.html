@@ -43,7 +43,10 @@
   --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 
-  --phase:var(--calm); /* cor da fase corrente — muda com o scroll */
+  /* Cor da fase corrente (muda com o scroll). Começa AZUL — é a cor da marca,
+     a mesma da logo. O verde/âmbar/vermelho ficam só onde têm SIGNIFICADO
+     (status de estoque e nível de risco), igual no app. */
+  --phase:var(--info);
 }
 
 *{box-sizing:border-box}
@@ -110,8 +113,8 @@ h1 em{font-style:italic;color:var(--phase);transition:color .8s ease}
 
 .badge{display:inline-flex;align-items:center;gap:9px;margin-top:26px;
   font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--calm);border:1px solid color-mix(in srgb,var(--calm) 36%,transparent);
-  background:color-mix(in srgb,var(--calm) 9%,transparent);padding:8px 14px;border-radius:999px}
+  color:var(--info);border:1px solid color-mix(in srgb,var(--info) 36%,transparent);
+  background:color-mix(in srgb,var(--info) 9%,transparent);padding:8px 14px;border-radius:999px}
 
 /* ---------- CTA ---------- */
 .cta{display:flex;align-items:center;justify-content:center;gap:12px;
@@ -314,10 +317,10 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
     </p>
 
     <div class="phases">
-      <div class="phase-card" style="--c:var(--calm)"><h3>01 · Calm</h3><p>Build your kit, check the tropics, find what's nearby. No panic, no noise.</p></div>
+      <div class="phase-card" style="--c:var(--info)"><h3>01 · Calm</h3><p>Build your kit, check the tropics, find what's nearby. No panic, no noise.</p></div>
       <div class="phase-card" style="--c:var(--watch)"><h3>02 · Threat</h3><p>A watch or the cone reaches you. Supplies and evacuation zones move front and center.</p></div>
       <div class="phase-card" style="--c:var(--danger)"><h3>03 · Impact</h3><p>Tornado warning or landfall. Everything collapses into shelter, SOS, and family.</p></div>
-      <div class="phase-card" style="--c:var(--info)"><h3>04 · Recovery</h3><p>What's open, where the flooding and downed lines are, and documenting damage.</p></div>
+      <div class="phase-card" style="--c:var(--calm)"><h3>04 · Recovery</h3><p>What's open, where the flooding and downed lines are, and documenting damage.</p></div>
     </div>
   </div>
 </section>
@@ -388,10 +391,10 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
   /* a página atravessa as fases da tempestade conforme o scroll */
   var root = document.documentElement;
   var phases = [
-    {c:'--calm',   t:'Scanning the Atlantic'},
+    {c:'--info',   t:'Scanning the Atlantic'},
     {c:'--watch',  t:'Watch issued · cone approaching'},
     {c:'--danger', t:'Tornado warning · take cover'},
-    {c:'--info',   t:'Storm passed · checking what is open'}
+    {c:'--calm',   t:'Storm passed · checking what is open'}
   ];
   var statusEl = document.getElementById('status'), current = -1;
   function onScroll(){
