@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StormStock — Free hurricane prep app for Florida</title>
+<meta name="description" content="Find water, gas, ice and generators in stock near you before a hurricane. Live storm and tornado alerts, open shelters, and family safety check-in. Free, no ads.">
+
+<!-- Redes sociais (Instagram/Facebook mostram este cartão) -->
+<meta property="og:title" content="StormStock — Free hurricane prep app">
+<meta property="og:description" content="Find water, gas, ice and generators in stock near you before a storm. Live alerts, shelters, family check-in. Free, no ads.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+
+<!-- Deep link oficial: o iOS reconhece e oferece abrir na App Store -->
+<meta name="apple-itunes-app" content="app-id=6789431176">
+
+<style>
+  :root {
+    --ink: #0A0E17;
+    --surface: #121826;
+    --line: #1F2937;
+    --text: #F4F7FB;
+    --muted: #9AA7B8;
+    --brand: #FB8B3C;
+    --on-brand: #14100A;
+    --calm: #34D399;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--ink);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 20px calc(48px + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: center;
+  }
+  .wrap { width: 100%; max-width: 520px; }
+
+  .logo {
+    width: 84px; height: 84px; border-radius: 20px;
+    background: linear-gradient(145deg, #16233B, #0D1526);
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 42px; margin: 0 auto 20px;
+  }
+  h1 {
+    font-size: clamp(28px, 8vw, 38px); line-height: 1.15;
+    margin: 0 0 12px; text-align: center; letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .sub {
+    color: var(--muted); text-align: center; margin: 0 auto 8px;
+    font-size: 17px; max-width: 40ch;
+  }
+  .free {
+    display: block; text-align: center; color: var(--calm);
+    font-weight: 700; font-size: 15px; margin-bottom: 28px;
+  }
+
+  .cta {
+    display: block; width: 100%;
+    background: var(--brand); color: var(--on-brand);
+    text-decoration: none; text-align: center;
+    font-size: 18px; font-weight: 800;
+    padding: 17px 20px; border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(251,139,60,0.25);
+  }
+  .cta:active { transform: translateY(1px); }
+  .cta-note {
+    text-align: center; color: var(--muted);
+    font-size: 13px; margin: 10px 0 0;
+  }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 16px; padding: 18px 20px; margin-top: 28px;
+  }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { padding: 9px 0; display: flex; gap: 12px; align-items: flex-start; font-size: 15px; }
+  li + li { border-top: 1px solid var(--line); }
+  .emo { font-size: 20px; line-height: 1.3; flex-shrink: 0; }
+
+  .hint {
+    margin-top: 22px; padding: 14px 16px;
+    border: 1px dashed var(--line); border-radius: 12px;
+    color: var(--muted); font-size: 13.5px; text-align: center;
+  }
+  .hint b { color: var(--text); }
+
+  footer {
+    margin-top: 32px; text-align: center;
+    color: var(--muted); font-size: 12.5px;
+  }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="logo">🌀</div>
+
+  <h1>Find supplies before the storm</h1>
+  <p class="sub">
+    See what’s actually in stock near you — water, gas, ice, batteries, generators —
+    plus live storm alerts, open shelters, and family check-in.
+  </p>
+  <span class="free">100% free · No ads · No account needed</span>
+
+  <a class="cta" id="cta" href="https://apps.apple.com/us/app/stormstock/id6789431176">
+    Download on the App Store
+  </a>
+  <p class="cta-note">iPhone &amp; iPad · Requires iOS 15.1 or later</p>
+
+  <div class="card">
+    <ul>
+      <li><span class="emo">📦</span><span><b>What’s in stock nearby</b> — updated by your neighbors, in real time</span></li>
+      <li><span class="emo">🌪️</span><span><b>Live storm &amp; tornado alerts</b> from the NWS and National Hurricane Center</span></li>
+      <li><span class="emo">🛟</span><span><b>Open shelters</b> near you (FEMA), updated automatically</span></li>
+      <li><span class="emo">🏪</span><span><b>What’s open</b> after the storm passes</span></li>
+      <li><span class="emo">👨‍👩‍👧</span><span><b>Family check-in</b> — share your location and “I’m safe” status</span></li>
+      <li><span class="emo">🌎</span><span>Available in <b>10 languages</b></span></li>
+    </ul>
+  </div>
+
+  <!-- Aparece só quando NÃO é iPhone/iPad (ex.: Android) -->
+  <div class="hint" id="android" hidden>
+    <b>On Android?</b> StormStock is iPhone-only for now.
+    An Android version is coming if there’s enough interest — thanks for your patience!
+  </div>
+
+  <!-- Aparece só dentro de navegador embutido (Instagram, Facebook…) -->
+  <div class="hint" id="inapp" hidden>
+    If the button doesn’t open the App Store, tap the <b>•••</b> menu in the corner
+    and choose <b>“Open in browser”</b> (or Safari).
+  </div>
+
+  <footer>
+    Made in Ocoee, Florida · <a href="../">Privacy Policy</a><br>
+    Questions? hello@sellerforgepro.com
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isAndroid = /Android/i.test(ua);
+  // Navegadores EMBUTIDOS (Instagram, Facebook, TikTok…) — é onde a App Store
+  // costuma dar tela branca, por isso mostramos a dica de "abrir no navegador".
+  var inApp = /Instagram|FBAN|FBAV|FB_IAB|Line\/|Twitter|TikTok|Snapchat|Pinterest|LinkedIn/i.test(ua);
+
+  if (isAndroid) document.getElementById('android').hidden = false;
+  if (inApp && isIOS) document.getElementById('inapp').hidden = false;
+
+  // No iPhone, fora de webview embutido, manda direto pra App Store (sem
+  // redirecionar dentro do Instagram — é justamente aí que trava em branco).
+  if (isIOS && !inApp) {
+    setTimeout(function () {
+      window.location.href = 'https://apps.apple.com/us/app/stormstock/id6789431176';
+    }, 900);
+  }
+})();
+</script>
+</body>
+</html>
