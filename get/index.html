@@ -3,168 +3,517 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>StormStock — Free hurricane prep app for Florida</title>
-<meta name="description" content="Find water, gas, ice and generators in stock near you before a hurricane. Live storm and tornado alerts, open shelters, and family safety check-in. Free, no ads.">
+<title>StormStock — Find supplies before the storm</title>
+<meta name="description" content="See what's actually in stock near you — water, gas, ice, generators — before a hurricane. Live storm and tornado alerts, open shelters, family check-in. Free, no ads.">
 
-<!-- Redes sociais (Instagram/Facebook mostram este cartão) -->
-<meta property="og:title" content="StormStock — Free hurricane prep app">
-<meta property="og:description" content="Find water, gas, ice and generators in stock near you before a storm. Live alerts, shelters, family check-in. Free, no ads.">
+<meta property="og:title" content="StormStock — Find supplies before the storm">
+<meta property="og:description" content="Water, gas, ice and generators — see what's in stock near you before a hurricane. Live alerts, shelters, family check-in. Free, no ads.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
-
-<!-- Deep link oficial: o iOS reconhece e oferece abrir na App Store -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#070B12">
 <meta name="apple-itunes-app" content="app-id=6789431176">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --ink: #0A0E17;
-    --surface: #121826;
-    --line: #1F2937;
-    --text: #F4F7FB;
-    --muted: #9AA7B8;
-    --brand: #FB8B3C;
-    --on-brand: #14100A;
-    --calm: #34D399;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background: var(--ink);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    padding: 32px 20px calc(48px + env(safe-area-inset-bottom));
-    display: flex;
-    justify-content: center;
-  }
-  .wrap { width: 100%; max-width: 520px; }
+:root{
+  /* Fases da tempestade — as MESMAS do app (calmo → ameaça → impacto) */
+  --calm:#34D399;
+  --threat:#FB8B3C;
+  --impact:#F4574F;
 
-  .logo {
-    width: 84px; height: 84px; border-radius: 20px;
-    background: linear-gradient(145deg, #16233B, #0D1526);
-    border: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 42px; margin: 0 auto 20px;
-  }
-  h1 {
-    font-size: clamp(28px, 8vw, 38px); line-height: 1.15;
-    margin: 0 0 12px; text-align: center; letter-spacing: -0.02em;
-    text-wrap: balance;
-  }
-  .sub {
-    color: var(--muted); text-align: center; margin: 0 auto 8px;
-    font-size: 17px; max-width: 40ch;
-  }
-  .free {
-    display: block; text-align: center; color: var(--calm);
-    font-weight: 700; font-size: 15px; margin-bottom: 28px;
-  }
+  --ink:#070B12;
+  --ink-2:#0B111C;
+  --panel:#0F1725;
+  --line:rgba(148,173,210,.14);
+  --line-bright:rgba(148,173,210,.32);
+  --text:#EEF3FA;
+  --muted:#8496AE;
+  --dim:#5B6B82;
 
-  .cta {
-    display: block; width: 100%;
-    background: var(--brand); color: var(--on-brand);
-    text-decoration: none; text-align: center;
-    font-size: 18px; font-weight: 800;
-    padding: 17px 20px; border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(251,139,60,0.25);
-  }
-  .cta:active { transform: translateY(1px); }
-  .cta-note {
-    text-align: center; color: var(--muted);
-    font-size: 13px; margin: 10px 0 0;
-  }
+  --serif:"Instrument Serif",ui-serif,Georgia,serif;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 
-  .card {
-    background: var(--surface); border: 1px solid var(--line);
-    border-radius: 16px; padding: 18px 20px; margin-top: 28px;
-  }
-  ul { list-style: none; padding: 0; margin: 0; }
-  li { padding: 9px 0; display: flex; gap: 12px; align-items: flex-start; font-size: 15px; }
-  li + li { border-top: 1px solid var(--line); }
-  .emo { font-size: 20px; line-height: 1.3; flex-shrink: 0; }
+  /* cor da fase corrente — muda com o scroll */
+  --phase:var(--calm);
+}
 
-  .hint {
-    margin-top: 22px; padding: 14px 16px;
-    border: 1px dashed var(--line); border-radius: 12px;
-    color: var(--muted); font-size: 13.5px; text-align: center;
-  }
-  .hint b { color: var(--text); }
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--ink);color:var(--text);
+  font-family:var(--sans);line-height:1.55;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+a{color:inherit}
 
-  footer {
-    margin-top: 32px; text-align: center;
-    color: var(--muted); font-size: 12.5px;
-  }
-  footer a { color: var(--muted); }
+/* ---------- grade de coordenadas (carta náutica) ---------- */
+.grid{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(to right,var(--line) 1px,transparent 1px),
+    linear-gradient(to bottom,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 78%);
+  opacity:.6;
+}
+/* chuva em canvas — intensifica conforme a fase */
+#rain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+
+.shell{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:0 22px}
+
+/* ---------- leitura de instrumento ---------- */
+.readout{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);
+}
+.tick{display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--phase);margin-right:8px;vertical-align:middle;
+  box-shadow:0 0 0 0 var(--phase);animation:ping 2.6s ease-out infinite}
+@keyframes ping{
+  0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--phase) 60%,transparent)}
+  70%{box-shadow:0 0 0 9px transparent}
+  100%{box-shadow:0 0 0 0 transparent}
+}
+
+/* ---------- HERO ---------- */
+header{position:relative;padding:76px 0 54px;overflow:hidden}
+/* varredura de radar */
+.scope{
+  position:absolute;top:-190px;left:50%;transform:translateX(-50%);
+  width:640px;height:640px;pointer-events:none;opacity:.5;
+}
+.scope i{position:absolute;inset:0;border-radius:50%;border:1px solid var(--line)}
+.scope i:nth-child(1){inset:0}
+.scope i:nth-child(2){inset:80px}
+.scope i:nth-child(3){inset:160px}
+.scope i:nth-child(4){inset:240px}
+.sweep{
+  position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg,
+    color-mix(in srgb,var(--phase) 34%,transparent) 0deg,
+    transparent 52deg,transparent 360deg);
+  animation:spin 7s linear infinite;
+  mask-image:radial-gradient(circle,#000 32%,transparent 71%);
+  -webkit-mask-image:radial-gradient(circle,#000 32%,transparent 71%);
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.rise{opacity:0;transform:translateY(16px);animation:rise .9s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+
+h1{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(46px,13.5vw,86px);line-height:.94;
+  letter-spacing:-.02em;margin:18px 0 0;text-wrap:balance;
+}
+h1 em{font-style:italic;color:var(--phase);transition:color .8s ease}
+.lede{
+  font-size:17.5px;color:var(--muted);max-width:44ch;margin:20px 0 0;
+}
+.lede b{color:var(--text);font-weight:600}
+
+/* selo grátis */
+.badge{
+  display:inline-flex;align-items:center;gap:9px;margin-top:26px;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--calm);border:1px solid color-mix(in srgb,var(--calm) 38%,transparent);
+  background:color-mix(in srgb,var(--calm) 9%,transparent);
+  padding:8px 14px;border-radius:999px;
+}
+
+/* ---------- CTA ---------- */
+.cta-wrap{margin-top:30px}
+.cta{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  background:var(--threat);color:#150E06;text-decoration:none;
+  font-weight:700;font-size:17.5px;letter-spacing:-.01em;
+  padding:18px 24px;border-radius:15px;
+  box-shadow:0 10px 34px -8px color-mix(in srgb,var(--threat) 60%,transparent);
+  transition:transform .18s cubic-bezier(.22,1,.36,1),box-shadow .18s ease;
+}
+.cta:hover{transform:translateY(-2px);box-shadow:0 16px 42px -8px color-mix(in srgb,var(--threat) 70%,transparent)}
+.cta:active{transform:translateY(1px)}
+.cta svg{width:20px;height:20px;flex:none}
+.cta-sub{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);text-align:center;margin:12px 0 0;
+}
+
+/* ---------- faixa de dados ---------- */
+.strip{
+  margin-top:44px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(3,1fr);
+}
+.strip div{padding:15px 4px;border-left:1px solid var(--line)}
+.strip div:first-child{border-left:0}
+.strip .n{font-family:var(--mono);font-size:19px;color:var(--text);font-weight:500}
+.strip .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+
+/* ---------- SEÇÕES ---------- */
+section{padding:74px 0;position:relative}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--phase);margin:0 0 14px;transition:color .8s ease;
+}
+h2{
+  font-family:var(--serif);font-weight:400;font-size:clamp(30px,7.4vw,44px);
+  line-height:1.06;letter-spacing:-.015em;margin:0 0 16px;text-wrap:balance;
+}
+.body{color:var(--muted);font-size:16.5px;max-width:46ch;margin:0}
+
+/* revelação no scroll */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- painel de estoque (o coração do app) ---------- */
+.panel{
+  margin-top:30px;background:var(--panel);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden;
+}
+.panel-hd{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:13px 17px;border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)
+}
+.row{display:flex;align-items:center;gap:13px;padding:14px 17px;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.row .ico{font-size:19px;width:24px;text-align:center;flex:none}
+.row .nm{flex:1;font-size:15px;font-weight:500}
+.row .ds{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:1px;letter-spacing:.04em}
+.pill{
+  font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;
+  padding:5px 10px;border-radius:999px;white-space:nowrap;flex:none;
+}
+.ok{color:var(--calm);background:color-mix(in srgb,var(--calm) 13%,transparent);border:1px solid color-mix(in srgb,var(--calm) 34%,transparent)}
+.low{color:var(--threat);background:color-mix(in srgb,var(--threat) 13%,transparent);border:1px solid color-mix(in srgb,var(--threat) 34%,transparent)}
+.out{color:var(--impact);background:color-mix(in srgb,var(--impact) 13%,transparent);border:1px solid color-mix(in srgb,var(--impact) 34%,transparent)}
+
+/* ---------- fases ---------- */
+.phases{margin-top:34px;display:grid;gap:12px}
+.phase-card{
+  border:1px solid var(--line);border-radius:14px;padding:17px 19px;
+  background:linear-gradient(180deg,var(--panel),transparent);
+  border-left:3px solid var(--c);
+}
+.phase-card h3{
+  font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--c);margin:0 0 7px;font-weight:600
+}
+.phase-card p{margin:0;font-size:15px;color:var(--muted)}
+
+/* ---------- lista de recursos ---------- */
+.feats{margin-top:34px;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.feat{background:var(--ink-2);padding:20px 19px}
+.feat .k{font-size:23px;line-height:1;display:block;margin-bottom:11px}
+.feat h3{font-size:15.5px;margin:0 0 5px;font-weight:600}
+.feat p{margin:0;font-size:14.5px;color:var(--muted);line-height:1.5}
+@media(min-width:620px){.feats{grid-template-columns:1fr 1fr}}
+
+/* ---------- idiomas ---------- */
+.langs{display:flex;flex-wrap:wrap;gap:7px;margin-top:22px}
+.langs span{
+  font-family:var(--mono);font-size:11px;letter-spacing:.07em;
+  border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--muted)
+}
+
+/* ---------- aviso in-app / android ---------- */
+.note{
+  margin-top:26px;border:1px dashed var(--line-bright);border-radius:13px;
+  padding:15px 17px;font-size:14px;color:var(--muted)
+}
+.note b{color:var(--text)}
+
+/* ---------- fecho ---------- */
+.close{text-align:center;padding:84px 0 30px}
+.close h2{font-size:clamp(32px,8.4vw,52px)}
+footer{
+  border-top:1px solid var(--line);padding:26px 0 46px;text-align:center;
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--dim);line-height:2
+}
+footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rise,.reveal{opacity:1!important;transform:none!important}
+  #rain{display:none}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="logo">🌀</div>
+<div class="grid"></div>
+<canvas id="rain"></canvas>
 
-  <h1>Find supplies before the storm</h1>
-  <p class="sub">
-    See what’s actually in stock near you — water, gas, ice, batteries, generators —
-    plus live storm alerts, open shelters, and family check-in.
-  </p>
-  <span class="free">100% free · No ads · No account needed</span>
-
-  <a class="cta" id="cta" href="https://apps.apple.com/us/app/stormstock/id6789431176">
-    Download on the App Store
-  </a>
-  <p class="cta-note">iPhone &amp; iPad · Requires iOS 15.1 or later</p>
-
-  <div class="card">
-    <ul>
-      <li><span class="emo">📦</span><span><b>What’s in stock nearby</b> — updated by your neighbors, in real time</span></li>
-      <li><span class="emo">🌪️</span><span><b>Live storm &amp; tornado alerts</b> from the NWS and National Hurricane Center</span></li>
-      <li><span class="emo">🛟</span><span><b>Open shelters</b> near you (FEMA), updated automatically</span></li>
-      <li><span class="emo">🏪</span><span><b>What’s open</b> after the storm passes</span></li>
-      <li><span class="emo">👨‍👩‍👧</span><span><b>Family check-in</b> — share your location and “I’m safe” status</span></li>
-      <li><span class="emo">🌎</span><span>Available in <b>10 languages</b></span></li>
-    </ul>
+<header>
+  <div class="scope" aria-hidden="true">
+    <i></i><i></i><i></i><i></i>
+    <div class="sweep"></div>
   </div>
 
-  <!-- Aparece só quando NÃO é iPhone/iPad (ex.: Android) -->
-  <div class="hint" id="android" hidden>
-    <b>On Android?</b> StormStock is iPhone-only for now.
-    An Android version is coming if there’s enough interest — thanks for your patience!
+  <div class="shell">
+    <p class="readout rise" style="animation-delay:.05s">
+      <span class="tick"></span><span id="status">Scanning the Atlantic</span>
+    </p>
+
+    <h1 class="rise" style="animation-delay:.14s">
+      Know what's<br>in stock<br><em>before</em> the storm.
+    </h1>
+
+    <p class="lede rise" style="animation-delay:.26s">
+      Water, gas, ice, batteries, generators — see what neighbors are actually
+      finding at stores near you. Plus <b>live storm &amp; tornado alerts</b>,
+      open shelters, and a way to tell your family you're safe.
+    </p>
+
+    <div class="rise" style="animation-delay:.36s">
+      <span class="badge">Free · No ads · No account</span>
+    </div>
+
+    <div class="cta-wrap rise" style="animation-delay:.46s">
+      <a class="cta" href="https://apps.apple.com/us/app/stormstock/id6789431176">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 12.54c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.48.83-.72 0-1.83-.81-3-.79-1.54.02-2.96.9-3.75 2.28-1.6 2.78-.41 6.89 1.15 9.14.76 1.1 1.67 2.34 2.86 2.29 1.15-.05 1.58-.74 2.97-.74 1.39 0 1.78.74 3 .72 1.24-.02 2.02-1.12 2.78-2.23.88-1.28 1.24-2.52 1.26-2.58-.03-.01-2.41-.93-2.43-3.66zM14.9 5.4c.63-.77 1.06-1.83.94-2.9-.91.04-2.01.61-2.67 1.37-.59.68-1.1 1.77-.96 2.81 1.01.08 2.05-.52 2.69-1.28z"/></svg>
+        Download on the App Store
+      </a>
+      <p class="cta-sub">iPhone &amp; iPad · iOS 15.1+ · 22 MB</p>
+    </div>
+
+    <div class="strip rise" style="animation-delay:.56s">
+      <div><div class="n">7</div><div class="l">Essentials tracked</div></div>
+      <div><div class="n">10</div><div class="l">Languages</div></div>
+      <div><div class="n">$0</div><div class="l">Forever</div></div>
+    </div>
+
+    <div class="note" id="inapp" hidden>
+      <b>Seeing a blank page when you tap?</b> Some in-app browsers (Instagram, Facebook)
+      block the App Store. Tap the <b>•••</b> menu and choose <b>Open in browser</b>.
+    </div>
+    <div class="note" id="android" hidden>
+      <b>On Android?</b> StormStock is iPhone-only right now. An Android version is
+      coming if there's enough interest — thanks for your patience.
+    </div>
   </div>
+</header>
 
-  <!-- Aparece só dentro de navegador embutido (Instagram, Facebook…) -->
-  <div class="hint" id="inapp" hidden>
-    If the button doesn’t open the App Store, tap the <b>•••</b> menu in the corner
-    and choose <b>“Open in browser”</b> (or Safari).
+<section class="reveal">
+  <div class="shell">
+    <p class="eyebrow">The 72 hours before landfall</p>
+    <h2>Four stores. Still no gas.</h2>
+    <p class="body">
+      Everyone in Central Florida knows the drill: the cone shifts toward you, and
+      suddenly the shelves are bare. You drive from store to store burning the fuel
+      you're trying to find. StormStock replaces that guesswork with what your
+      neighbors are seeing right now.
+    </p>
+
+    <div class="panel">
+      <div class="panel-hd"><span>Nearby · 5 mi</span><span id="clock">Live</span></div>
+      <div class="row">
+        <span class="ico">⛽</span>
+        <div class="nm">Wawa <div class="ds">0.8 mi · Open until 11 PM</div></div>
+        <span class="pill ok">In stock</span>
+      </div>
+      <div class="row">
+        <span class="ico">🛒</span>
+        <div class="nm">Publix <div class="ds">1.4 mi · Water &amp; ice</div></div>
+        <span class="pill low">Low</span>
+      </div>
+      <div class="row">
+        <span class="ico">🔧</span>
+        <div class="nm">Home Depot <div class="ds">2.6 mi · Generators</div></div>
+        <span class="pill out">Sold out</span>
+      </div>
+      <div class="row">
+        <span class="ico">🏪</span>
+        <div class="nm">Dollar General <div class="ds">3.1 mi · Batteries</div></div>
+        <span class="pill ok">In stock</span>
+      </div>
+    </div>
   </div>
+</section>
 
-  <footer>
-    Made in Ocoee, Florida · <a href="../">Privacy Policy</a><br>
-    Questions? hello@sellerforgepro.com
-  </footer>
+<section class="reveal">
+  <div class="shell">
+    <p class="eyebrow">Adaptive by design</p>
+    <h2>The app changes as the storm does.</h2>
+    <p class="body">
+      StormStock reads live data from the National Weather Service and the National
+      Hurricane Center, then reshapes itself around what you need at that exact moment.
+    </p>
 
+    <div class="phases">
+      <div class="phase-card" style="--c:var(--calm)">
+        <h3>01 · Calm</h3>
+        <p>Build your kit, check the tropics, find what's nearby. No panic, no noise.</p>
+      </div>
+      <div class="phase-card" style="--c:var(--threat)">
+        <h3>02 · Threat</h3>
+        <p>A watch or the cone reaches you. Supplies and evacuation zones move front and center.</p>
+      </div>
+      <div class="phase-card" style="--c:var(--impact)">
+        <h3>03 · Impact</h3>
+        <p>Tornado warning or landfall. Everything collapses into shelter, SOS, and family.</p>
+      </div>
+      <div class="phase-card" style="--c:var(--dim)">
+        <h3>04 · Recovery</h3>
+        <p>What's open, where the flooding and downed lines are, and documenting damage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="reveal">
+  <div class="shell">
+    <p class="eyebrow">What's inside</p>
+    <h2>Built for the worst week of the year.</h2>
+
+    <div class="feats">
+      <div class="feat">
+        <span class="k">📦</span>
+        <h3>Live supply map</h3>
+        <p>Water, gas, ice, batteries, generators, propane and canned food — reported by neighbors, timestamped so you know how fresh it is.</p>
+      </div>
+      <div class="feat">
+        <span class="k">🌪️</span>
+        <h3>Official alerts</h3>
+        <p>NWS tornado warnings drawn on the map, plus the NHC hurricane cone and track. It tells you when you're actually inside it.</p>
+      </div>
+      <div class="feat">
+        <span class="k">🛟</span>
+        <h3>Open shelters</h3>
+        <p>FEMA's shelter list, sorted by distance and refreshed on its own during the storm.</p>
+      </div>
+      <div class="feat">
+        <span class="k">👨‍👩‍👧</span>
+        <h3>Family check-in</h3>
+        <p>Share your location and mark yourself safe. Your people get a push the moment your status changes.</p>
+      </div>
+      <div class="feat">
+        <span class="k">⚠️</span>
+        <h3>Hazard reports</h3>
+        <p>Flooding, downed lines, blocked roads and fallen trees — mapped by the people driving them.</p>
+      </div>
+      <div class="feat">
+        <span class="k">🤝</span>
+        <h3>Neighbors</h3>
+        <p>A local chat and a mutual-aid board. Someone has a spare generator; someone needs a ride.</p>
+      </div>
+    </div>
+
+    <div class="langs">
+      <span>English</span><span>Español</span><span>Português</span><span>Kreyòl</span>
+      <span>Français</span><span>Tiếng Việt</span><span>中文</span><span>Tagalog</span>
+      <span>Русский</span><span>Deutsch</span>
+    </div>
+  </div>
+</section>
+
+<div class="close reveal">
+  <div class="shell">
+    <h2>The next one is<br>already forming.</h2>
+    <p class="body" style="margin:0 auto 30px">Take ten seconds now so you're not driving in circles later.</p>
+    <a class="cta" href="https://apps.apple.com/us/app/stormstock/id6789431176">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 12.54c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.48.83-.72 0-1.83-.81-3-.79-1.54.02-2.96.9-3.75 2.28-1.6 2.78-.41 6.89 1.15 9.14.76 1.1 1.67 2.34 2.86 2.29 1.15-.05 1.58-.74 2.97-.74 1.39 0 1.78.74 3 .72 1.24-.02 2.02-1.12 2.78-2.23.88-1.28 1.24-2.52 1.26-2.58-.03-.01-2.41-.93-2.43-3.66zM14.9 5.4c.63-.77 1.06-1.83.94-2.9-.91.04-2.01.61-2.67 1.37-.59.68-1.1 1.77-.96 2.81 1.01.08 2.05-.52 2.69-1.28z"/></svg>
+      Get StormStock — Free
+    </a>
+    <p class="cta-sub">No ads · No subscriptions · No account required</p>
+  </div>
 </div>
 
+<footer>
+  <div class="shell">
+    Made in Ocoee, Florida<br>
+    <a href="../">Privacy Policy</a> · hello@sellerforgepro.com<br>
+    Not a substitute for official emergency guidance. In an emergency, call 911.
+  </div>
+</footer>
+
 <script>
-(function () {
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ua = navigator.userAgent || '';
-  var isIOS = /iPad|iPhone|iPod/.test(ua) ||
-              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   var isAndroid = /Android/i.test(ua);
-  // Navegadores EMBUTIDOS (Instagram, Facebook, TikTok…) — é onde a App Store
-  // costuma dar tela branca, por isso mostramos a dica de "abrir no navegador".
   var inApp = /Instagram|FBAN|FBAV|FB_IAB|Line\/|Twitter|TikTok|Snapchat|Pinterest|LinkedIn/i.test(ua);
 
   if (isAndroid) document.getElementById('android').hidden = false;
-  if (inApp && isIOS) document.getElementById('inapp').hidden = false;
+  else if (inApp) document.getElementById('inapp').hidden = false;
 
-  // No iPhone, fora de webview embutido, manda direto pra App Store (sem
-  // redirecionar dentro do Instagram — é justamente aí que trava em branco).
-  if (isIOS && !inApp) {
-    setTimeout(function () {
-      window.location.href = 'https://apps.apple.com/us/app/stormstock/id6789431176';
-    }, 900);
+  /* ---- revelação no scroll ---- */
+  var items = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {rootMargin:'0px 0px -12% 0px'});
+    items.forEach(function(el){ io.observe(el); });
+  } else {
+    items.forEach(function(el){ el.classList.add('in'); });
   }
+
+  /* ---- a página atravessa as fases da tempestade conforme o scroll ---- */
+  var root = document.documentElement;
+  var phases = [
+    {c:'--calm',   t:'Scanning the Atlantic'},
+    {c:'--threat', t:'Watch issued · cone approaching'},
+    {c:'--impact', t:'Tornado warning · take cover'},
+    {c:'--calm',   t:'Storm passed · checking what is open'}
+  ];
+  var statusEl = document.getElementById('status');
+  var current = -1;
+  function onScroll(){
+    var max = document.body.scrollHeight - window.innerHeight;
+    var p = max > 0 ? Math.min(window.scrollY / max, .999) : 0;
+    var i = Math.floor(p * phases.length);
+    if (i !== current) {
+      current = i;
+      root.style.setProperty('--phase', 'var(' + phases[i].c + ')');
+      if (statusEl) statusEl.textContent = phases[i].t;
+    }
+    if (rain) rain.style.opacity = String(Math.min(p * 1.9, .85));
+  }
+
+  /* ---- chuva (leve): linhas inclinadas, pausa fora da tela ---- */
+  var rain = document.getElementById('rain'), ctx, drops = [], raf = 0, W = 0, H = 0;
+  function initRain(){
+    if (reduce || !rain || !rain.getContext) { if(rain) rain.style.display='none'; rain=null; return; }
+    ctx = rain.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = rain.width = Math.floor(innerWidth * dpr);
+    H = rain.height = Math.floor(innerHeight * dpr);
+    rain.style.width = innerWidth + 'px';
+    rain.style.height = innerHeight + 'px';
+    ctx.scale(dpr, dpr);
+    var n = innerWidth < 640 ? 46 : 80;
+    drops = [];
+    for (var i = 0; i < n; i++) {
+      drops.push({ x:Math.random()*innerWidth, y:Math.random()*innerHeight,
+                   l:6+Math.random()*16, v:3.4+Math.random()*4.6, o:.12+Math.random()*.3 });
+    }
+  }
+  function draw(){
+    if (!ctx) return;
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+    ctx.lineWidth = 1; ctx.lineCap = 'round';
+    for (var i=0;i<drops.length;i++){
+      var d = drops[i];
+      ctx.strokeStyle = 'rgba(150,185,230,' + d.o + ')';
+      ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.l*.34, d.y + d.l); ctx.stroke();
+      d.y += d.v; d.x -= d.v*.34;
+      if (d.y > innerHeight){ d.y = -d.l; d.x = Math.random()*innerWidth*1.3; }
+    }
+    raf = requestAnimationFrame(draw);
+  }
+  function start(){ if (rain && !raf) raf = requestAnimationFrame(draw); }
+  function stop(){ if (raf){ cancelAnimationFrame(raf); raf = 0; } }
+
+  initRain(); start(); onScroll();
+  addEventListener('scroll', onScroll, {passive:true});
+  addEventListener('resize', function(){ initRain(); }, {passive:true});
+  document.addEventListener('visibilitychange', function(){ document.hidden ? stop() : start(); });
 })();
 </script>
 </body>
