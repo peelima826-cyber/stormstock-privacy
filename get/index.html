@@ -147,17 +147,73 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,7.4vw,44px);
   transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
 .reveal.in{opacity:1;transform:none}
 
-/* ---------- galeria de telas do app ---------- */
-.gallery{margin-top:30px;display:flex;gap:14px;overflow-x:auto;padding:4px 22px 18px;
-  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none;margin-left:-22px;margin-right:-22px}
-.gallery::-webkit-scrollbar{display:none}
-.gallery img{
-  width:255px;flex:none;border-radius:14px;border:1px solid var(--line);
-  scroll-snap-align:center;background:var(--surface);
-  box-shadow:0 18px 44px -18px rgba(0,0,0,.85)}
-.swipe{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--text-3);margin:2px 0 0}
+/* ---------- carrossel 3D (coverflow) das telas do app ---------- */
+.carousel{margin-top:34px;position:relative;z-index:2;user-select:none;-webkit-user-select:none}
+.stage{
+  position:relative;height:600px;
+  perspective:1400px;perspective-origin:50% 42%;
+  transform-style:preserve-3d;
+  cursor:grab;touch-action:pan-y;
+}
+.stage.drag{cursor:grabbing}
+.slide{
+  position:absolute;top:0;left:50%;margin:0;width:255px;height:553px;
+  transform:translate3d(-50%,0,0);
+  transition:transform .72s cubic-bezier(.2,.8,.25,1),opacity .55s ease,filter .55s ease;
+  will-change:transform,opacity;
+}
+.slide img{
+  width:255px;height:553px;border-radius:18px;
+  border:1px solid var(--line);background:var(--surface);
+  box-shadow:0 30px 70px -28px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.03) inset;
+  pointer-events:none;
+}
+/* brilho que atravessa o card central, como uma varredura de radar */
+.slide::after{
+  content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;
+  background:linear-gradient(115deg,transparent 34%,
+    color-mix(in srgb,var(--info) 16%,transparent) 47%,transparent 60%);
+  opacity:0;transition:opacity .5s ease;
+}
+.slide.is-active::after{opacity:1;animation:shine 5.2s ease-in-out infinite}
+@keyframes shine{
+  0%,72%{transform:translateX(-120%)}
+  92%,100%{transform:translateX(120%)}
+}
+
+.carousel-ui{max-width:760px;margin:0 auto;padding:26px 22px 0;text-align:center}
+.cap{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text-2);margin:0;min-height:17px;
+  transition:opacity .3s ease,transform .3s ease;
+}
+.cap.swap{opacity:0;transform:translateY(5px)}
+
+.dots{display:flex;justify-content:center;gap:7px;margin-top:16px}
+.dots button{
+  width:8px;height:8px;padding:0;border:0;border-radius:99px;cursor:pointer;
+  background:var(--line);transition:width .45s cubic-bezier(.2,.8,.25,1),background .35s ease;
+}
+.dots button[aria-selected="true"]{width:26px;background:var(--info)}
+
+.bar{width:150px;height:2px;background:var(--line);border-radius:2px;margin:18px auto 0;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--info);border-radius:2px}
+
+@media(max-width:520px){
+  .stage{height:520px;perspective:1100px}
+  .slide,.slide img{width:216px;height:468px}
+}
+
+/* Sem JS ou com movimento reduzido: vira uma faixa rolável simples. */
+.no-js .stage,.stage.plain{
+  height:auto;display:flex;gap:14px;overflow-x:auto;padding:4px 22px 18px;
+  perspective:none;scroll-snap-type:x mandatory;scrollbar-width:none;
+}
+.no-js .stage::-webkit-scrollbar,.stage.plain::-webkit-scrollbar{display:none}
+.no-js .slide,.stage.plain .slide{
+  position:static;transform:none;flex:none;opacity:1;scroll-snap-align:center;
+}
+.stage.plain .slide::after{display:none}
 
 /* ---------- painel de estoque ---------- */
 .panel{margin-top:30px;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
@@ -275,15 +331,34 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
     <h2>Everything, one tap away.</h2>
     <p class="body">Built dark for 3 a.m. and one-handed for when you're loading the car.</p>
   </div>
-  <div class="gallery">
-    <img src="img/shot-3.webp" alt="StormStock nearby stores screen showing stock of water, canned food and fuel" width="255" loading="lazy">
-    <img src="img/shot-2.webp" alt="StormStock home screen showing calm status and weather" width="255" loading="lazy">
-    <img src="img/shot-5.webp" alt="StormStock live map with stores, hazards and the hurricane cone" width="255" loading="lazy">
-    <img src="img/shot-4.webp" alt="StormStock store detail with stock reporting" width="255" loading="lazy">
-    <img src="img/shot-6.webp" alt="StormStock community chat and mutual aid board" width="255" loading="lazy">
-    <img src="img/shot-8.webp" alt="StormStock emergency screen with 911 and shelters" width="255" loading="lazy">
+  <div class="carousel" id="carousel">
+    <div class="stage" id="stage">
+      <figure class="slide" data-cap="Nearby · what's in stock right now">
+        <img src="img/shot-3.webp" alt="StormStock nearby stores screen showing stock of water, canned food and fuel" width="255" height="553">
+      </figure>
+      <figure class="slide" data-cap="Home · adapts to the current threat">
+        <img src="img/shot-2.webp" alt="StormStock home screen showing calm status and weather" width="255" height="553" loading="lazy">
+      </figure>
+      <figure class="slide" data-cap="Map · stores, hazards and the cone">
+        <img src="img/shot-5.webp" alt="StormStock live map with stores, hazards and the hurricane cone" width="255" height="553" loading="lazy">
+      </figure>
+      <figure class="slide" data-cap="Store · report and confirm stock">
+        <img src="img/shot-4.webp" alt="StormStock store detail with stock reporting" width="255" height="553" loading="lazy">
+      </figure>
+      <figure class="slide" data-cap="Community · neighbors and mutual aid">
+        <img src="img/shot-6.webp" alt="StormStock community chat and mutual aid board" width="255" height="553" loading="lazy">
+      </figure>
+      <figure class="slide" data-cap="Emergency · shelter, 911 and family">
+        <img src="img/shot-8.webp" alt="StormStock emergency screen with 911 and shelters" width="255" height="553" loading="lazy">
+      </figure>
+    </div>
+
+    <div class="carousel-ui">
+      <p class="cap" id="cap">Nearby · what's in stock right now</p>
+      <div class="dots" id="dots" role="tablist" aria-label="App screens"></div>
+      <div class="bar"><i id="bar"></i></div>
+    </div>
   </div>
-  <div class="shell"><p class="swipe">← Swipe to browse</p></div>
 </section>
 
 <section class="reveal">
@@ -445,6 +520,132 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
   addEventListener('scroll',onScroll,{passive:true});
   addEventListener('resize',function(){initRain()},{passive:true});
   document.addEventListener('visibilitychange',function(){document.hidden?stop():start()});
+
+  /* ================= CARROSSEL 3D (coverflow) ================= */
+  (function(){
+    var stage = document.getElementById('stage');
+    if (!stage) return;
+    var slides = [].slice.call(stage.querySelectorAll('.slide'));
+    var capEl = document.getElementById('cap');
+    var dotsEl = document.getElementById('dots');
+    var barEl = document.getElementById('bar');
+    var carousel = document.getElementById('carousel');
+    if (!slides.length) return;
+
+    // Movimento reduzido: entrega uma faixa rolável simples, sem 3D nem auto-play.
+    if (reduce) {
+      stage.classList.add('plain');
+      if (barEl && barEl.parentNode) barEl.parentNode.style.display = 'none';
+      if (dotsEl) dotsEl.style.display = 'none';
+      return;
+    }
+
+    var i = 0, n = slides.length;
+    var DUR = 4600;          // tempo de cada tela no auto-avanço
+    var timer = 0, t0 = 0, paused = false, inView = true;
+
+    // ---- monta os pontinhos ----
+    slides.forEach(function(s, k){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role','tab');
+      b.setAttribute('aria-label','Screen ' + (k+1));
+      b.addEventListener('click', function(){ go(k, true); });
+      dotsEl.appendChild(b);
+    });
+    var dots = [].slice.call(dotsEl.children);
+
+    // ---- posiciona cada slide no espaço 3D conforme a distância do centro ----
+    function layout(){
+      var narrow = innerWidth < 520;
+      var X = narrow ? 54 : 62;      // deslocamento lateral (%)
+      var Z = narrow ? 150 : 200;    // profundidade por passo (px)
+      for (var k = 0; k < n; k++) {
+        var o = k - i;
+        // dá a volta pelo caminho mais curto (carrossel infinito)
+        if (o > n/2) o -= n;
+        if (o < -n/2) o += n;
+        var a = Math.abs(o);
+        var s = slides[k];
+        if (a > 2) { s.style.opacity = '0'; s.style.pointerEvents = 'none'; s.style.zIndex = 0; continue; }
+        var tx = -50 + o * X;
+        var tz = -a * Z;
+        var ry = -o * 26;
+        var sc = 1 - a * 0.13;
+        s.style.transform = 'translate3d(' + tx + '%,0,' + tz + 'px) rotateY(' + ry + 'deg) scale(' + sc + ')';
+        s.style.opacity = a === 0 ? '1' : (a === 1 ? '.6' : '.2');
+        s.style.filter = a === 0 ? 'none' : 'saturate(.65)';
+        s.style.zIndex = String(10 - a);
+        s.style.pointerEvents = a === 0 ? 'auto' : 'none';
+        s.classList.toggle('is-active', a === 0);
+      }
+    }
+
+    function go(k, user){
+      i = ((k % n) + n) % n;
+      layout();
+      dots.forEach(function(d, x){ d.setAttribute('aria-selected', x === i ? 'true' : 'false'); });
+      // legenda troca com um fade curto
+      var txt = slides[i].getAttribute('data-cap') || '';
+      capEl.classList.add('swap');
+      setTimeout(function(){ capEl.textContent = txt; capEl.classList.remove('swap'); }, 190);
+      if (user) restart();
+    }
+
+    // ---- auto-avanço com barra de progresso ----
+    function tick(now){
+      if (!t0) t0 = now;
+      var p = Math.min((now - t0) / DUR, 1);
+      barEl.style.width = (p * 100) + '%';
+      if (p >= 1) { t0 = now; go(i + 1); }
+      timer = requestAnimationFrame(tick);
+    }
+    function play(){ if (!timer && !paused && inView) { t0 = 0; timer = requestAnimationFrame(tick); } }
+    function halt(){ if (timer) { cancelAnimationFrame(timer); timer = 0; } }
+    function restart(){ halt(); barEl.style.width = '0%'; play(); }
+
+    // ---- arrastar / deslizar ----
+    var down = false, sx = 0, moved = false;
+    stage.addEventListener('pointerdown', function(e){
+      down = true; moved = false; sx = e.clientX;
+      stage.classList.add('drag'); halt();
+      if (stage.setPointerCapture) { try { stage.setPointerCapture(e.pointerId); } catch(_){} }
+    });
+    stage.addEventListener('pointermove', function(e){
+      if (!down) return;
+      var dx = e.clientX - sx;
+      if (Math.abs(dx) > 45 && !moved) {   // um passo por gesto
+        moved = true;
+        go(i + (dx < 0 ? 1 : -1), true);
+      }
+    });
+    function up(){ if (!down) return; down = false; stage.classList.remove('drag'); if (!moved) restart(); }
+    stage.addEventListener('pointerup', up);
+    stage.addEventListener('pointercancel', up);
+    stage.addEventListener('pointerleave', up);
+
+    // ---- teclado ----
+    stage.tabIndex = 0;
+    stage.setAttribute('aria-label','App screenshots — use arrow keys');
+    stage.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight') { go(i + 1, true); e.preventDefault(); }
+      if (e.key === 'ArrowLeft')  { go(i - 1, true); e.preventDefault(); }
+    });
+
+    // ---- pausa quando o mouse está em cima ou quando sai da tela ----
+    carousel.addEventListener('mouseenter', function(){ paused = true; halt(); });
+    carousel.addEventListener('mouseleave', function(){ paused = false; restart(); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function(es){
+        inView = es[0].isIntersecting;
+        inView ? play() : halt();
+      }, {threshold:.25}).observe(carousel);
+    }
+    document.addEventListener('visibilitychange', function(){ document.hidden ? halt() : play(); });
+    addEventListener('resize', layout, {passive:true});
+
+    go(0); play();
+  })();
 })();
 </script>
 </body>
