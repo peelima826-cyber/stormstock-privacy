@@ -3,19 +3,144 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>StormStock — Find supplies before the storm</title>
-<meta name="description" content="See what's actually in stock near you — water, gas, ice, generators — before a hurricane. Live storm and tornado alerts, open shelters, family check-in. Free, no ads.">
+<!-- O título carrega as palavras que as pessoas realmente digitam: o nome do
+     app, o que ele faz e a região. Curto pra não ser cortado no Google. -->
+<title>StormStock — Hurricane Supply Tracker for Florida | Free App</title>
+<meta name="description" content="Free iPhone app for Florida hurricane season. See which stores near you have water, gas, ice, batteries and generators in stock, check gas prices, track NWS storm and tornado alerts, and find open shelters. No ads, no account needed.">
+<link rel="canonical" href="https://stormstock.app/">
+<meta name="robots" content="index, follow, max-image-preview:large">
 
+<meta property="og:site_name" content="StormStock">
+<meta property="og:url" content="https://stormstock.app/">
 <meta property="og:title" content="StormStock — Find supplies before the storm">
 <meta property="og:description" content="Water, gas, ice and generators — see what's in stock near you before a hurricane. Live alerts, shelters, family check-in. Free, no ads.">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://stormstock.app/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="StormStock app icon">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="StormStock — Find supplies before the storm">
+<meta name="twitter:description" content="See what's in stock near you before a hurricane. Free, no ads.">
 <meta name="twitter:image" content="https://stormstock.app/img/og.jpg">
 <meta name="theme-color" content="#0A0E17">
 <meta name="apple-itunes-app" content="app-id=6789431176">
 <link rel="icon" href="/img/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="/img/favicon.png">
+
+<!-- Dados estruturados: é o que faz o Google entender que isto é um APP e
+     mostrar o cartão rico (nome, preço, categoria, sistema) nos resultados.
+     O FAQPage pode render as perguntas expandidas direto na busca. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MobileApplication",
+      "@id": "https://stormstock.app/#app",
+      "name": "StormStock",
+      "alternateName": "StormStock: Hurricane Prep",
+      "url": "https://stormstock.app/",
+      "installUrl": "https://apps.apple.com/us/app/stormstock/id6789431176",
+      "downloadUrl": "https://apps.apple.com/us/app/stormstock/id6789431176",
+      "applicationCategory": "WeatherApplication",
+      "applicationSubCategory": "Emergency Preparedness",
+      "operatingSystem": "iOS 15.1 or later",
+      "image": "https://stormstock.app/img/og.jpg",
+      "screenshot": [
+        "https://stormstock.app/img/shot-3.webp",
+        "https://stormstock.app/img/shot-5.webp",
+        "https://stormstock.app/img/shot-6.webp"
+      ],
+      "description": "Free hurricane preparedness app for Central Florida. Crowd-sourced stock of water, gas, ice, batteries and generators at nearby stores, gas prices, live NWS tornado and severe storm alerts, the NHC hurricane cone, open FEMA shelters, hazard reports and family check-in.",
+      "inLanguage": [
+        "en",
+        "es",
+        "pt",
+        "ht",
+        "fr",
+        "vi",
+        "zh",
+        "tl",
+        "ru",
+        "de"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Crowd-sourced supply availability at nearby stores",
+        "Gas prices reported by neighbors",
+        "Live tornado, severe thunderstorm and flash flood alerts",
+        "Hurricane cone and track from the National Hurricane Center",
+        "Open FEMA shelters near you",
+        "Flood, downed power line and blocked road reports",
+        "Family location sharing and safety check-in",
+        "Neighborhood chat and mutual-aid board"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://stormstock.app/#website",
+      "url": "https://stormstock.app/",
+      "name": "StormStock",
+      "inLanguage": "en-US",
+      "about": {
+        "@id": "https://stormstock.app/#app"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://stormstock.app/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is StormStock free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. StormStock is completely free, has no ads and no subscriptions, and you do not need an account to use it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does StormStock know what is in stock?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Neighbors report what they see at stores - in stock, low or sold out - and each report is timestamped so you know how fresh it is. Gas stations can also have the current price reported."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where do the storm alerts come from?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tornado, severe thunderstorm and flash flood alerts come from the National Weather Service. The hurricane cone and track come from the National Hurricane Center. Shelter data comes from FEMA."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is StormStock available on Android?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not yet. StormStock is currently an iPhone and iPad app requiring iOS 15.1 or later. An Android version may follow."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which areas does StormStock cover?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Weather alerts and shelters work across the United States. The crowd-sourced supply and gas price data is most useful in Central Florida, where the community is largest."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -264,6 +389,23 @@ footer{border-top:1px solid var(--line);padding:26px 0 46px;text-align:center;
   font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--text-3);line-height:2}
 footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--line)}
 
+
+/* ---------- perguntas frequentes ---------- */
+.faq{margin-top:26px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.faq details{border-top:1px solid var(--line);background:var(--surface)}
+.faq details:first-child{border-top:0}
+.faq summary{
+  cursor:pointer;list-style:none;padding:17px 19px;
+  font-size:16px;font-weight:600;color:var(--text);
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--info);font-size:22px;font-weight:400;line-height:1;flex:none}
+.faq details[open] summary::after{content:"\2212"}
+.faq details[open] summary{color:var(--info)}
+.faq p{margin:0;padding:0 19px 19px;color:var(--text-2);font-size:15.5px;line-height:1.6}
+.faq a{color:var(--info)}
+
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -418,6 +560,54 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
       <span>English</span><span>Español</span><span>Português</span><span>Kreyòl</span>
       <span>Français</span><span>Tiếng Việt</span><span>中文</span><span>Tagalog</span>
       <span>Русский</span><span>Deutsch</span>
+    </div>
+  </div>
+</section>
+
+<!-- Perguntas frequentes. Existe por dois motivos: responde a duvida real de
+     quem chega, e da ao Google o TEXTO que combina com o JSON-LD do FAQPage
+     (marcacao sem conteudo visivel nao e indexada como resposta). -->
+<section class="reveal" id="faq">
+  <div class="shell">
+    <p class="eyebrow">Questions</p>
+    <h2>Before you download.</h2>
+
+    <div class="faq">
+      <details>
+        <summary>Is StormStock free?</summary>
+        <p>Yes &mdash; completely. No ads, no subscriptions, and you don't need an account.
+           Browsing stores, the map, the weather and reporting stock all work anonymously.</p>
+      </details>
+      <details>
+        <summary>How does it know what's in stock?</summary>
+        <p>Neighbors report what they see at a store &mdash; in stock, low, or sold out &mdash; and every
+           report is timestamped so you can judge how fresh it is. At gas stations people can
+           also report the current price, and you can sort by cheapest.</p>
+      </details>
+      <details>
+        <summary>Where do the storm alerts come from?</summary>
+        <p>Tornado, severe thunderstorm and flash flood alerts come straight from the
+           <strong>National Weather Service</strong>, with the official warning area drawn on the map.
+           The hurricane cone and track come from the <strong>National Hurricane Center</strong>, and
+           open shelters come from <strong>FEMA</strong>.</p>
+      </details>
+      <details>
+        <summary>Is there an Android version?</summary>
+        <p>Not yet &mdash; StormStock is an iPhone and iPad app and needs iOS 15.1 or later.
+           An Android version may follow if enough people ask for it.</p>
+      </details>
+      <details>
+        <summary>Which areas does it cover?</summary>
+        <p>Weather alerts and shelters work anywhere in the United States. The neighbor-reported
+           supply and gas price data is most useful in Central Florida, where the community is
+           biggest &mdash; it gets better as more people nearby use it.</p>
+      </details>
+      <details>
+        <summary>Do you sell my data?</summary>
+        <p>No. There are no ads and no trackers, and we don't sell anything to anyone.
+           Your location is used to show what's near you. Read the
+           <a href="/privacy/">privacy policy</a>.</p>
+      </details>
     </div>
   </div>
 </section>
