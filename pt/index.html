@@ -77,7 +77,7 @@
       },
       "featureList": [
         "Crowd-sourced supply availability at nearby stores",
-        "Gas prices reported by neighbors",
+        "Preço da gasolina reported by neighbors",
         "Ao vivo tornado, severe thunderstorm and flash flood alerts",
         "Hurricane cone and track from the National Hurricane Center",
         "Open FEMA shelters near you",
@@ -423,6 +423,27 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
 .langbar a{color:inherit}
 .langbar strong{font-weight:700;opacity:1}
 </style>
+
+<style>
+.langbar{margin-top:14px;font-size:13px;opacity:.75;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.langbar a{color:inherit}
+.langbar strong{font-weight:700;opacity:1}
+
+/* Seletor no TOPO. O do rodapé sozinho não servia: numa página desta altura,
+   quem fala português caía no inglês e teria que rolar o site inteiro pra
+   descobrir que existe tradução. */
+.langtop{margin-left:auto;display:flex;gap:2px;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.1em}
+.langtop a,.langtop strong{padding:5px 8px;border-radius:7px;text-decoration:none;color:var(--text-3);border:1px solid transparent}
+.langtop a:hover{color:var(--text-1);border-color:var(--line)}
+.langtop strong{color:var(--info);border-color:var(--line);background:rgba(255,255,255,.04)}
+
+/* Sugestão quando o idioma do navegador não bate com o da página. */
+.langsuggest{display:none;position:relative;z-index:4;max-width:760px;margin:0 auto;
+  padding:10px 22px;font-size:14px;display:none;align-items:center;gap:12px;flex-wrap:wrap}
+.langsuggest.on{display:flex}
+.langsuggest a{color:var(--info);font-weight:600}
+.langsuggest button{background:none;border:0;color:var(--text-3);cursor:pointer;font:inherit;padding:4px;margin-left:auto}
+</style>
 </head>
 <body>
 
@@ -432,7 +453,10 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
 <div class="brandbar">
   <img src="/img/mark.png" alt="Ícone do app StormStock" width="38" height="38">
   <span class="nm">Storm<span>Stock</span></span>
+  <nav class="langtop" aria-label="Language"><strong aria-current="true">EN</strong><a href="/pt/" hreflang="pt" lang="pt">PT</a><a href="/es/" hreflang="es" lang="es">ES</a></nav>
 </div>
+
+<div id="langsuggest" class="langsuggest"></div>
 
 <header>
   <div class="scope" aria-hidden="true"><i></i><i></i><i></i><i></i><div class="sweep"></div></div>
@@ -551,7 +575,9 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
 
     <div class="feats">
       <div class="feat"><span class="k">📦</span><h3>Mapa de suprimentos ao vivo</h3><p>Água, gasolina, gelo, pilhas, geradores, gás e enlatados — relatados por vizinhos, com a hora de cada relato para você saber o quanto é recente.</p></div>
-      <div class="feat"><span class="k">🌪️</span><h3>Alertas oficiais</h3><p>Avisos de tornado do NWS desenhados no mapa, mais o cone e a rota do furacão do NHC. Ele avisa quando você está mesmo dentro.</p></div>
+      <div class="feat"><span class="k">⛽</span><h3>Preço da gasolina</h3><p>Os vizinhos relatam quanto estão pagando na bomba, com a hora de cada relato. Ordene pelo mais barato e pare de gastar gasolina procurando gasolina.</p></div>
+      <div class="feat"><span class="k">🌪️</span><h3>Alertas oficiais</h3><p>Avisos de tornado, maré de tempestade, vento extremo, enchente relâmpago e tsunami do NWS, com a área oficial desenhada no mapa. Ele avisa quando você está mesmo dentro de uma.</p></div>
+      <div class="feat"><span class="k">🌀</span><h3>Rastreador de furacão</h3><p>Toque num furacão para ver categoria, ventos, pressão e direção, se está ganhando ou perdendo força, a rota prevista completa e o boletim oficial do NHC.</p></div>
       <div class="feat"><span class="k">🛟</span><h3>Abrigos abertos</h3><p>A lista de abrigos da FEMA, ordenada por distância e atualizada sozinha durante a tempestade.</p></div>
       <div class="feat"><span class="k">👨‍👩‍👧</span><h3>Aviso à família</h3><p>Compartilhe sua localização e marque que está bem. Os seus recebem um aviso no instante em que seu status muda.</p></div>
       <div class="feat"><span class="k">⚠️</span><h3>Relatos de perigo</h3><p>Alagamento, fio caído, via interditada e árvore no chão — mapeados por quem está passando por ali.</p></div>
@@ -623,7 +649,7 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
     Feito em Ocoee, Flórida<br>
     <a href="/privacy/">Política de Privacidade</a> · hello@sellerforgepro.com<br>
     Não substitui as orientações oficiais de emergência. Em emergência, ligue 911.
-    <nav class="langbar" aria-label="Language"><a href="/" hreflang="en">English</a> · <strong aria-current="true">Português</strong> · <a href="/es/" hreflang="es">Español</a></nav>
+    <nav class="langbar" aria-label="Language"><strong aria-current="true">English</strong> · <a href="/pt/" hreflang="pt">Português</a> · <a href="/es/" hreflang="es">Español</a></nav>
   </div>
 </footer>
 
@@ -830,6 +856,30 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
 
     go(0); play();
   })();
+})();
+</script>
+
+<script>
+(function(){
+  var CUR = document.documentElement.lang.slice(0,2).toPoucoerCase();
+  var TXT = {
+    pt: ['Este site está disponível em português.', 'Ver em português', '/pt/'],
+    es: ['Este sitio está disponible en español.', 'Ver en español', '/es/'],
+    en: ['This site is available in English.', 'View in English', '/']
+  };
+  try { if (localStorage.getItem('ss-lang-dismissed') === '1') return; } catch (e) {}
+  var want = (navigator.language || 'en').slice(0,2).toPoucoerCase();
+  if (!TXT[want] || want === CUR) return;
+  var box = document.getElementById('langsuggest');
+  if (!box) return;
+  box.innerHTML = '<span>' + TXT[want][0] + '</span>' +
+    '<a href="' + TXT[want][2] + '">' + TXT[want][1] + ' \u2192</a>' +
+    '<button type="button" aria-label="Dismiss">\u2715</button>';
+  box.className = 'langsuggest on';
+  box.querySelector('button').addEventListener('click', function(){
+    box.className = 'langsuggest';
+    try { localStorage.setItem('ss-lang-dismissed','1'); } catch (e) {}
+  });
 })();
 </script>
 </body>

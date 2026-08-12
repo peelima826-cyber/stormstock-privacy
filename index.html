@@ -423,6 +423,27 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
 .langbar a{color:inherit}
 .langbar strong{font-weight:700;opacity:1}
 </style>
+
+<style>
+.langbar{margin-top:14px;font-size:13px;opacity:.75;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.langbar a{color:inherit}
+.langbar strong{font-weight:700;opacity:1}
+
+/* Seletor no TOPO. O do rodapé sozinho não servia: numa página desta altura,
+   quem fala português caía no inglês e teria que rolar o site inteiro pra
+   descobrir que existe tradução. */
+.langtop{margin-left:auto;display:flex;gap:2px;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.1em}
+.langtop a,.langtop strong{padding:5px 8px;border-radius:7px;text-decoration:none;color:var(--text-3);border:1px solid transparent}
+.langtop a:hover{color:var(--text-1);border-color:var(--line)}
+.langtop strong{color:var(--info);border-color:var(--line);background:rgba(255,255,255,.04)}
+
+/* Sugestão quando o idioma do navegador não bate com o da página. */
+.langsuggest{display:none;position:relative;z-index:4;max-width:760px;margin:0 auto;
+  padding:10px 22px;font-size:14px;display:none;align-items:center;gap:12px;flex-wrap:wrap}
+.langsuggest.on{display:flex}
+.langsuggest a{color:var(--info);font-weight:600}
+.langsuggest button{background:none;border:0;color:var(--text-3);cursor:pointer;font:inherit;padding:4px;margin-left:auto}
+</style>
 </head>
 <body>
 
@@ -432,7 +453,10 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
 <div class="brandbar">
   <img src="/img/mark.png" alt="StormStock app icon" width="38" height="38">
   <span class="nm">Storm<span>Stock</span></span>
+  <nav class="langtop" aria-label="Language"><strong aria-current="true">EN</strong><a href="/pt/" hreflang="pt" lang="pt">PT</a><a href="/es/" hreflang="es" lang="es">ES</a></nav>
 </div>
+
+<div id="langsuggest" class="langsuggest"></div>
 
 <header>
   <div class="scope" aria-hidden="true"><i></i><i></i><i></i><i></i><div class="sweep"></div></div>
@@ -559,7 +583,9 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
 
     <div class="feats">
       <div class="feat"><span class="k">📦</span><h3>Live supply map</h3><p>Water, gas, ice, batteries, generators, propane and canned food — reported by neighbors, timestamped so you know how fresh it is.</p></div>
-      <div class="feat"><span class="k">🌪️</span><h3>Official alerts</h3><p>NWS tornado warnings drawn on the map, plus the NHC hurricane cone and track. It tells you when you're actually inside it.</p></div>
+      <div class="feat"><span class="k">⛽</span><h3>Gas prices</h3><p>Neighbors report what they're paying at the pump, with the time of each report. Sort by cheapest so you stop burning fuel looking for fuel.</p></div>
+      <div class="feat"><span class="k">🌪️</span><h3>Official alerts</h3><p>Tornado, storm surge, extreme wind, flash flood and tsunami warnings from the NWS, with the official area drawn on the map. It tells you when you are actually inside one.</p></div>
+      <div class="feat"><span class="k">🌀</span><h3>Storm tracker</h3><p>Tap a hurricane for its category, winds, pressure and heading, whether it is strengthening or weakening, the full forecast track, and the official NHC advisory.</p></div>
       <div class="feat"><span class="k">🛟</span><h3>Open shelters</h3><p>FEMA's shelter list, sorted by distance and refreshed on its own during the storm.</p></div>
       <div class="feat"><span class="k">👨‍👩‍👧</span><h3>Family check-in</h3><p>Share your location and mark yourself safe. Your people get a push the moment your status changes.</p></div>
       <div class="feat"><span class="k">⚠️</span><h3>Hazard reports</h3><p>Flooding, downed lines, blocked roads and fallen trees — mapped by the people driving them.</p></div>
@@ -847,6 +873,30 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
 
     go(0); play();
   })();
+})();
+</script>
+
+<script>
+(function(){
+  var CUR = document.documentElement.lang.slice(0,2).toLowerCase();
+  var TXT = {
+    pt: ['Este site está disponível em português.', 'Ver em português', '/pt/'],
+    es: ['Este sitio está disponible en español.', 'Ver en español', '/es/'],
+    en: ['This site is available in English.', 'View in English', '/']
+  };
+  try { if (localStorage.getItem('ss-lang-dismissed') === '1') return; } catch (e) {}
+  var want = (navigator.language || 'en').slice(0,2).toLowerCase();
+  if (!TXT[want] || want === CUR) return;
+  var box = document.getElementById('langsuggest');
+  if (!box) return;
+  box.innerHTML = '<span>' + TXT[want][0] + '</span>' +
+    '<a href="' + TXT[want][2] + '">' + TXT[want][1] + ' \u2192</a>' +
+    '<button type="button" aria-label="Dismiss">\u2715</button>';
+  box.className = 'langsuggest on';
+  box.querySelector('button').addEventListener('click', function(){
+    box.className = 'langsuggest';
+    try { localStorage.setItem('ss-lang-dismissed','1'); } catch (e) {}
+  });
 })();
 </script>
 </body>
