@@ -166,4 +166,34 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  <url>
+    <loc>https://stormstock.app/business-hurricane-supply-list/</loc>
+      <xhtml:link rel="alternate" hreflang="en" href="https://stormstock.app/business-hurricane-supply-list/"/>
+      <xhtml:link rel="alternate" hreflang="pt" href="https://stormstock.app/pt/kit-de-furacao-para-empresas/"/>
+      <xhtml:link rel="alternate" hreflang="es" href="https://stormstock.app/es/kit-de-huracan-para-empresas/"/>
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://stormstock.app/business-hurricane-supply-list/"/>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://stormstock.app/pt/kit-de-furacao-para-empresas/</loc>
+      <xhtml:link rel="alternate" hreflang="en" href="https://stormstock.app/business-hurricane-supply-list/"/>
+      <xhtml:link rel="alternate" hreflang="pt" href="https://stormstock.app/pt/kit-de-furacao-para-empresas/"/>
+      <xhtml:link rel="alternate" hreflang="es" href="https://stormstock.app/es/kit-de-huracan-para-empresas/"/>
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://stormstock.app/business-hurricane-supply-list/"/>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://stormstock.app/es/kit-de-huracan-para-empresas/</loc>
+      <xhtml:link rel="alternate" hreflang="en" href="https://stormstock.app/business-hurricane-supply-list/"/>
+      <xhtml:link rel="alternate" hreflang="pt" href="https://stormstock.app/pt/kit-de-furacao-para-empresas/"/>
+      <xhtml:link rel="alternate" hreflang="es" href="https://stormstock.app/es/kit-de-huracan-para-empresas/"/>
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://stormstock.app/business-hurricane-supply-list/"/>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>
