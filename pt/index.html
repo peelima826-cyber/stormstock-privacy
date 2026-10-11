@@ -291,7 +291,14 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,7.4vw,44px);
 .reveal.in{opacity:1;transform:none}
 
 /* ---------- carrossel 3D (coverflow) das telas do app ---------- */
-.carousel{margin-top:34px;position:relative;z-index:2;user-select:none;-webkit-user-select:none}
+/* O carrossel ocupa a largura INTEIRA da tela e empurra as telas laterais pra
+   fora dela. Sem conter isso, a pagina inteira rolava de lado no celular (medido:
+   444px de conteudo numa tela de 360). `clip` corta SEM virar caixa rolavel e sem
+   mexer no eixo vertical (sombras e legenda seguem visiveis); `hidden` antes e
+   reserva pra Safari anterior ao 16. Cortar aqui = cortar na borda da tela, onde
+   as laterais ja sumiam de vista: o visual nao muda. */
+.carousel{margin-top:34px;position:relative;z-index:2;user-select:none;-webkit-user-select:none;
+  overflow-x:hidden;overflow-x:clip}
 .stage{
   position:relative;height:600px;
   perspective:1400px;perspective-origin:50% 42%;
@@ -897,14 +904,14 @@ footer a{color:var(--text-2);text-decoration:none;border-bottom:1px solid var(--
 
 <script>
 (function(){
-  var CUR = document.documentElement.lang.slice(0,2).toPoucoerCase();
+  var CUR = document.documentElement.lang.slice(0,2).toLowerCase();
   var TXT = {
     pt: ['Este site está disponível em português.', 'Ver em português', '/pt/'],
     es: ['Este sitio está disponible en español.', 'Ver en español', '/es/'],
     en: ['This site is available in English.', 'View in English', '/']
   };
   try { if (localStorage.getItem('ss-lang-dismissed') === '1') return; } catch (e) {}
-  var want = (navigator.language || 'en').slice(0,2).toPoucoerCase();
+  var want = (navigator.language || 'en').slice(0,2).toLowerCase();
   if (!TXT[want] || want === CUR) return;
   var box = document.getElementById('langsuggest');
   if (!box) return;
